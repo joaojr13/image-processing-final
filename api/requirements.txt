@@ -1,0 +1,10 @@
+# Backend: redes neurais, imagens e avaliação. Python 3.11.
+torch==2.8.0
+torchvision==0.23.0
+facenet-pytorch==2.5.3
+Pillow==11.3.0
+numpy==2.4.6
+scikit-learn==1.9.1
+onnxruntime==1.31.1
+keras==3.15.1
+h5py==3.16.0

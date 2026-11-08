@@ -5,6 +5,7 @@ A arquitetura interna pertence ao modelo externo, armazenado em ferplus.onnx.
 """
 import json
 from api.reconhecimento.apoio_arquivos import PASTA_MODELOS, calcular_resumo_arquivo
+from api.reconhecimento.apoio_download_modelos import garantir_modelo_publico
 from .apoio_contratos import AnalisadorExpressao, ErroAnaliseExpressao
 from .etapa_01_preparacao import preparar_rosto_para_expressao, converter_saidas_em_pontuacoes
 
@@ -24,6 +25,7 @@ class AnalisadorFERPlus(AnalisadorExpressao):
             import onnxruntime as executor_onnx
             registro = json.loads((self.pasta_modelo / 'registro.json').read_text())
             caminho = self.pasta_modelo / 'ferplus.onnx'
+            garantir_modelo_publico(caminho, registro['origem'], registro['sha256'])
             if calcular_resumo_arquivo(caminho) != registro['sha256']:
                 raise ValueError('Os pesos de expressão diferem do registro.')
             if list(NOMES_EXPRESSOES) != registro['classes']:

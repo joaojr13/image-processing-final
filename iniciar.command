@@ -5,4 +5,4 @@ if [[ ! -x .venv/bin/python ]]; then
   echo "Ambiente não encontrado. Consulte a instalação no README.md."
   exit 1
 fi
-exec .venv/bin/python -m streamlit run web/etapa_01_app.py
+exec .venv/bin/python -m streamlit run web/etapa_01_app.py --server.address 127.0.0.1 --server.port 8505

@@ -4,10 +4,14 @@ __pycache__/
 .pytest_cache/
 .DS_Store
 .env
+.env.*
 .streamlit/secrets.toml
-api/dados/**
-!api/dados/LEIA-ME.md
-api/modelos/**
-!api/modelos/LEIA-ME.md
-api/relatorios/**
+# Modelos externos são baixados das fontes originais, com SHA-256 conferido.
+api/modelos/extrator_facenet.pt
+api/modelos/expressoes/ferplus.onnx
+api/modelos/.keras/
+api/modelos/treinamentos/
+# Somente a avaliação ativa faz parte da publicação.
+api/relatorios/*
+!api/relatorios/avaliacao.json
 !api/relatorios/LEIA-ME.md

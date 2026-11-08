@@ -7,7 +7,7 @@
 
 A ordem das saídas é Diego, Fernanda, Guilherme, João e Samanta. Mudar essa ordem sem atualizar pesos e registros torna os nomes incorretos.
 
-Os pesos ativos foram convertidos para Keras: matriz da Linear transposta para Dense, com vieses preservados. O programa usa arquivos locais e não depende da instalação antiga. Os pesos são ignorados pelo Git; mantenha-os ao copiar o projeto.
+Os pesos ativos foram convertidos para Keras: matriz da Linear transposta para Dense, com vieses preservados. O Git inclui nossos pesos e os registros. FaceNet e FER+ são baixados das fontes públicas quando ausentes, com SHA-256 conferido antes de carregar. Novos treinamentos ficam somente na instalação que os executou.
 
 ## Expressão facial
 

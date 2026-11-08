@@ -1,3 +1,3 @@
-# Instala as duas partes do projeto no mesmo ambiente local.
+# Entrada única de instalação, tanto localmente quanto no Streamlit Cloud.
 -r api/requirements.txt
--r web/requirements.txt
+-r web/dependencias.txt

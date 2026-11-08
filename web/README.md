@@ -10,8 +10,10 @@ Execute na raiz do projeto, onde ficam `web`, `api` e `.streamlit`:
 .venv/bin/python -m streamlit run web/etapa_01_app.py
 ```
 
-O endereço permanece http://127.0.0.1:8505/. O arquivo `iniciar.command` na raiz executa o mesmo comando.
+O comando direto usa a porta padrão do Streamlit. O arquivo `iniciar.command` na raiz fixa http://127.0.0.1:8505/ para uso local.
 
-`web/requirements.txt` lista as dependências da interface. Como a aplicação utiliza o backend local, instale `requirements.txt` da raiz para executar o projeto completo.
+`web/dependencias.txt` lista as dependências da interface. Como a aplicação utiliza o backend local, instale `requirements.txt` da raiz para executar o projeto completo.
 
 O guia [ORDEM_EXECUCAO.md](../ORDEM_EXECUCAO.md) descreve a ordem de leitura das telas e a ligação com o backend.
+
+No Streamlit Cloud, use `web/etapa_01_app.py` como entrada. Existe apenas um `requirements.txt` da aplicação na raiz, para instalar também o backend. Consulte [PUBLICACAO.md](../PUBLICACAO.md).

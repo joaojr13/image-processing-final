@@ -6,4 +6,4 @@ O treino lê somente sua divisão; a avaliação percorre os originais de teste 
 
 Não distribua duplicatas ou quadros do mesmo vídeo entre treino e teste. A divisão original foi preservada e não garante sessões fotográficas independentes. Repetir avaliações não aumenta a quantidade de fotos de teste.
 
-Alterar imagens exige atualizar consistentemente manifesto, pesos e avaliação. Os dados são ignorados pelo Git.
+Alterar imagens exige atualizar consistentemente manifesto, pesos e avaliação. A base registrada está incluída no Git para permitir a galeria, o treino e a avaliação em outra máquina. Fotos enviadas ao site continuam apenas na memória.

@@ -1,0 +1,165 @@
+{
+  "descricao": "Avaliação do modelo fixo em cinco fotos separadas do treino; pipeline completo desde os originais.",
+  "nomes": [
+    "Diego",
+    "Fernanda",
+    "Guilherme",
+    "João",
+    "Samanta"
+  ],
+  "quantidade_treino": 40,
+  "quantidade_teste": 5,
+  "pesos_identificacao_sha256": "4fb395bf56f0f9f0e76a32e3bcfb5bf3e9117f31ebb866283cf5b6625c54020b",
+  "pesos_extrator_sha256": "281cebca8662831adb987a874bdcb36e73f5b1c6dc5ee5878f305e985625d99b",
+  "manifesto_sha256": "27c6d2ed2a9c85f67955af84089a6f68217e51140ca25920d12da9b31c4be6d0",
+  "previsoes": [
+    {
+      "arquivo": "dados/teste/diego/foto_01.png",
+      "nome_real": "Diego",
+      "nome_previsto": "Diego",
+      "acertou": true,
+      "pontuacoes": [
+        0.9982120990753174,
+        0.00022346321202348918,
+        0.00011501770495669916,
+        0.0007818652666173875,
+        0.000667404558043927
+      ]
+    },
+    {
+      "arquivo": "dados/teste/fernanda/foto_01.png",
+      "nome_real": "Fernanda",
+      "nome_previsto": "Fernanda",
+      "acertou": true,
+      "pontuacoes": [
+        0.0006989737739786506,
+        0.9980044960975647,
+        0.0006451628287322819,
+        4.9316960939904675e-05,
+        0.0006019692518748343
+      ]
+    },
+    {
+      "arquivo": "dados/teste/guilherme/foto_01.png",
+      "nome_real": "Guilherme",
+      "nome_previsto": "Guilherme",
+      "acertou": true,
+      "pontuacoes": [
+        0.0073924618773162365,
+        0.0012932043755427003,
+        0.9911026954650879,
+        7.203819404821843e-05,
+        0.00013954757014289498
+      ]
+    },
+    {
+      "arquivo": "dados/teste/joao/foto_01.png",
+      "nome_real": "João",
+      "nome_previsto": "João",
+      "acertou": true,
+      "pontuacoes": [
+        0.0002848762087523937,
+        0.00014079509128350765,
+        4.448718755156733e-05,
+        0.9994852542877197,
+        4.4620777771342546e-05
+      ]
+    },
+    {
+      "arquivo": "dados/teste/samanta/foto_01.png",
+      "nome_real": "Samanta",
+      "nome_previsto": "Samanta",
+      "acertou": true,
+      "pontuacoes": [
+        0.001026326441206038,
+        0.006580652669072151,
+        0.00026107841404154897,
+        0.008123863488435745,
+        0.9840080738067627
+      ]
+    }
+  ],
+  "acuracia": 1.0,
+  "precisao_macro": 1.0,
+  "recall_macro": 1.0,
+  "f1_macro": 1.0,
+  "matriz_confusao": [
+    [
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      1,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      1,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      1,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      1
+    ]
+  ],
+  "por_pessoa": [
+    {
+      "nome": "Diego",
+      "precisao": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "quantidade": 1
+    },
+    {
+      "nome": "Fernanda",
+      "precisao": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "quantidade": 1
+    },
+    {
+      "nome": "Guilherme",
+      "precisao": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "quantidade": 1
+    },
+    {
+      "nome": "João",
+      "precisao": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "quantidade": 1
+    },
+    {
+      "nome": "Samanta",
+      "precisao": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "quantidade": 1
+    }
+  ],
+  "limites": [
+    "Base pequena; fotos já observadas no desenvolvimento.",
+    "O teste separa arquivos, mas não assegura ocasiões de captura independentes.",
+    "Sempre escolhe um dos cinco integrantes; rejeição de desconhecidos não foi validada."
+  ]
+}

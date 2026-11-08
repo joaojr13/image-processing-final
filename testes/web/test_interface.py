@@ -19,3 +19,22 @@ def test_interface_sem_experimentos_e_com_codigo_real():
     pagina.run()
     assert not pagina.exception,pagina.exception
     assert 'resultado' not in pagina.session_state
+
+
+def test_entrada_encontra_api_sem_pythonpath_do_projeto(tmp_path):
+    import subprocess
+    import sys
+    from pathlib import Path
+
+    entrada = Path(__file__).resolve().parents[2] / 'web/etapa_01_app.py'
+    codigo = (
+        'from streamlit.testing.v1 import AppTest; '
+        f'pagina = AppTest.from_file({str(entrada)!r}, default_timeout=60).run(); '
+        'assert not pagina.exception, pagina.exception; '
+        'assert len(pagina.tabs) == 3'
+    )
+    resultado = subprocess.run(
+        [sys.executable, '-I', '-c', codigo], cwd=tmp_path,
+        capture_output=True, text=True, timeout=90,
+    )
+    assert resultado.returncode == 0, resultado.stdout + resultado.stderr

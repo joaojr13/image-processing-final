@@ -1,4 +1,12 @@
 """Entrada do site. As telas e as redes têm seus próprios módulos em português."""
+from pathlib import Path
+import sys
+
+# Streamlit pode iniciar pela pasta /web. Incluímos a raiz para encontrar /api.
+raiz_projeto = str(Path(__file__).resolve().parents[1])
+if raiz_projeto not in sys.path:
+    sys.path.insert(0, raiz_projeto)
+
 import streamlit as st
 from api.etapa_01_consultas import carregar_contexto_modelos
 from web.telas.etapa_01_estilo import aplicar_estilo

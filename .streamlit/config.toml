@@ -7,8 +7,6 @@ textColor = "#183633"
 font = "sans serif"
 
 [server]
-address = "127.0.0.1"
-port = 8505
 maxUploadSize = 12
 headless = true
 

@@ -9,7 +9,7 @@ ap02-image-processing/
 ├── web/
 │   ├── etapa_01_app.py              # Entrada da interface
 │   ├── telas/                       # Telas numeradas de 01 a 05
-│   └── requirements.txt
+│   └── dependencias.txt
 ├── api/
 │   ├── etapa_01_consultas.py        # Configuração e consultas
 │   ├── etapa_02_servicos.py         # Operações de análise
@@ -30,7 +30,7 @@ ap02-image-processing/
 
 `web` cuida da interação e apresentação: escolhe a foto, mostra os resultados e desenha os gráficos. `api` prepara os pixels, executa as redes, treina e avalia. A interface usa somente `api.etapa_02_servicos` e `api.etapa_01_consultas` para acessar o backend. Os arquivos e as regras de validação ficam no backend.
 
-A comunicação é **local, por chamadas Python no mesmo processo**. A pasta `api` não expõe endpoints HTTP nem inicia outro servidor. Essa organização mantém o projeto simples e permite executar treinamento e avaliação sem abrir a interface. O Streamlit continua na porta 8505.
+A comunicação é **local, por chamadas Python no mesmo processo**. A pasta `api` não expõe endpoints HTTP nem inicia outro servidor. Essa organização mantém o projeto simples e permite executar treinamento e avaliação sem abrir a interface. O lançador local usa a porta 8505; na nuvem, a plataforma define o endereço e a porta.
 
 Execute os comandos abaixo **na raiz do projeto**, que contém as pastas `web` e `api`.
 
@@ -44,7 +44,7 @@ Nesta instalação, abra `iniciar.command` ou execute, na pasta do projeto:
 .venv/bin/python -m streamlit run web/etapa_01_app.py
 ```
 
-Acesse **http://127.0.0.1:8505/**. O endereço é local e funciona enquanto o processo estiver aberto.
+O lançador `iniciar.command` abre **http://127.0.0.1:8505/**; o comando direto usa a porta padrão do Streamlit. O endereço é local e funciona enquanto o processo estiver aberto.
 
 Para montar outro ambiente, use Python 3.11:
 
@@ -54,7 +54,9 @@ python3.11 -m venv .venv
 .venv/bin/python -m streamlit run web/etapa_01_app.py
 ```
 
-Os pesos e as fotos já estão nesta instalação, mas são ignorados pelo Git. Copiar somente o código para outra máquina não basta: forneça também `api/modelos`, `api/dados` e `api/relatorios`, com seus registros. O programa não baixa pesos de identificação automaticamente. As dependências ficam em `requirements.txt`; as versões completas do ambiente verificado estão em `requirements-lock-macos.txt`.
+O repositório inclui a base registrada, os pesos do classificador, os registros e a avaliação ativa. FaceNet e FER+ são baixados das fontes originais quando necessários e conferidos por SHA-256. Os modelos externos ocupam cerca de 140 MB em disco; a primeira identificação pode demorar enquanto são baixados. As fotos enviadas ao site não são salvas.
+
+Para publicar, siga [PUBLICACAO.md](PUBLICACAO.md). `requirements.txt` instala interface e backend; `web/dependencias.txt` é uma lista auxiliar. O arquivo `requirements-lock-macos.txt` documenta o ambiente local anterior, não é usado pela nuvem.
 
 ## Responsabilidades separadas
 
@@ -142,7 +144,7 @@ Pesos, curva de perda e registro são salvos em `api/modelos/treinamentos/<data>
 
 O primeiro comando avalia o modelo ativo e atualiza `api/relatorios/avaliacao.json`. O segundo salva o relatório junto dos pesos indicados. O relatório vincula métricas, pesos e manifesto por SHA-256; a interface omite métricas de outra versão.
 
-Os pesos ativos foram aprendidos anteriormente em PyTorch e convertidos para Keras, com equivalência verificada. A procedência está em `api/modelos/registro.json` e `api/relatorios/migracao_keras.json`. Novos treinamentos usam Keras e salvam seus próprios pesos, sem substituir o modelo ativo.
+Os pesos ativos foram aprendidos anteriormente em PyTorch e convertidos para Keras, com equivalência verificada. A procedência está em `api/modelos/registro.json`. Novos treinamentos usam Keras e salvam seus próprios pesos, sem substituir o modelo ativo.
 
 ## Encontrar o código
 

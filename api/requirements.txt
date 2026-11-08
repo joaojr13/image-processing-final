@@ -1,6 +1,10 @@
 # Backend: redes neurais, imagens e avaliação. Python 3.11.
-torch==2.8.0
-torchvision==0.23.0
+# Wheels CPU para Python 3.11 / Linux x86_64 (Streamlit Cloud).
+# URLs diretas mantêm as demais bibliotecas no índice padrão do PyPI.
+torch @ https://download.pytorch.org/whl/cpu/torch-2.8.0%2Bcpu-cp311-cp311-manylinux_2_28_x86_64.whl ; sys_platform == "linux" and platform_machine == "x86_64"
+torchvision @ https://download.pytorch.org/whl/cpu/torchvision-0.23.0%2Bcpu-cp311-cp311-manylinux_2_28_x86_64.whl ; sys_platform == "linux" and platform_machine == "x86_64"
+torch==2.8.0 ; sys_platform != "linux" or platform_machine != "x86_64"
+torchvision==0.23.0 ; sys_platform != "linux" or platform_machine != "x86_64"
 facenet-pytorch==2.5.3
 Pillow==11.3.0
 numpy==2.4.6

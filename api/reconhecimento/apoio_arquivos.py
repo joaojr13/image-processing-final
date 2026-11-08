@@ -2,6 +2,7 @@
 import hashlib
 import json
 from pathlib import Path
+from .apoio_download_modelos import garantir_modelo_publico, URL_FACENET
 
 # Os caminhos do manifesto são relativos a esta pasta /api.
 RAIZ_API = Path(__file__).resolve().parents[1]
@@ -27,6 +28,8 @@ def conferir_pesos(registro):
         caminho = (PASTA_MODELOS / registro[chave]['arquivo']).resolve()
         if not caminho.is_relative_to(PASTA_MODELOS.resolve()):
             raise ValueError('Caminho de pesos inválido.')
+        if chave == 'extrator':
+            garantir_modelo_publico(caminho, URL_FACENET, registro[chave]['sha256'])
         if calcular_resumo_arquivo(caminho) != registro[chave]['sha256']:
             raise ValueError('Os pesos do modelo foram alterados. Confira o registro antes de continuar.')
 

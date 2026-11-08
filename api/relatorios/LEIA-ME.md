@@ -4,4 +4,4 @@
 
 Cinco acertos em cinco fotos descrevem somente esse conjunto pequeno, já consultado no desenvolvimento. Não são um teste novo e cego. Não há avaliação de rejeição de desconhecidos.
 
-`migracao_keras.json` documenta a equivalência dos pesos ativos após a conversão para Keras. `validacao_treinamento_keras.json` registra a verificação do treinamento em Keras. São registros de procedência, sem código antigo e sem acrescentar amostras de teste. Novas avaliações ficam junto dos pesos em `api/modelos/treinamentos/`.
+`migracao_keras.json` documenta a equivalência dos pesos ativos após a conversão para Keras. `validacao_treinamento_keras.json` registra a verificação do treinamento em Keras. Esses registros locais de procedência não são publicados no Git e não acrescentam amostras de teste. Novas avaliações ficam junto dos pesos em `api/modelos/treinamentos/`.

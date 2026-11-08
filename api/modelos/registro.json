@@ -1,0 +1,52 @@
+{
+  "identificador": "facenet_congelada_identificacao_keras_v2",
+  "nomes": [
+    "Diego",
+    "Fernanda",
+    "Guilherme",
+    "João",
+    "Samanta"
+  ],
+  "rotulos": [
+    "diego",
+    "fernanda",
+    "guilherme",
+    "joao",
+    "samanta"
+  ],
+  "extrator": {
+    "arquivo": "extrator_facenet.pt",
+    "sha256": "281cebca8662831adb987a874bdcb36e73f5b1c6dc5ee5878f305e985625d99b",
+    "arquitetura": "InceptionResnetV1",
+    "base_pre_treino": "VGGFace2",
+    "parametros_congelados": 23482624,
+    "fonte": "https://github.com/timesler/facenet-pytorch",
+    "aprende_com_grupo": false
+  },
+  "identificacao": {
+    "arquivo": "identificacao_pessoas.weights.h5",
+    "sha256": "4fb395bf56f0f9f0e76a32e3bcfb5bf3e9117f31ebb866283cf5b6625c54020b",
+    "arquitetura": "Dropout(0.1) → Dense(5), entrada 512",
+    "parametros_treinaveis": 2565,
+    "epocas": 200,
+    "semente": 42,
+    "otimizador": "AdamW",
+    "taxa_aprendizado": 0.03,
+    "decaimento_pesos": 0.001,
+    "imagens_treino": 40,
+    "imagens_teste": 5,
+    "biblioteca": "Keras",
+    "versao_keras": "3.15.1",
+    "motor": "torch",
+    "origem_treinamento": "Pesos aprendidos anteriormente em PyTorch; convertidos para Keras sem novo treino."
+  },
+  "manifesto_sha256": "27c6d2ed2a9c85f67955af84089a6f68217e51140ca25920d12da9b31c4be6d0",
+  "migracao": "Linear PyTorch [5,512] transposta para Dense Keras [512,5]; vieses preservados. Equivalência verificada nas cinco fotos de teste.",
+  "origem_pesos_classificador_sha256": "66376c86442d7c20e1453edd660e1ecd345abc185a309cc32c78a9d76b08f74e",
+  "limites": [
+    "Base pequena; fotos já observadas no desenvolvimento.",
+    "O teste separa arquivos, mas não assegura ocasiões de captura independentes.",
+    "Sempre escolhe um dos cinco integrantes; rejeição de desconhecidos não foi validada."
+  ],
+  "origem_pesos_antes_keras_sha256": "dcb76b659fd3228f9291a1af87c60dffca4a611a26b9a23221a6ed1ca804cd3c"
+}

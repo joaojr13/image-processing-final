@@ -72,7 +72,9 @@ def test_pipeline_real_mantem_identidade_e_executa_ferplus():
         resultado = pipeline.identificar((RAIZ_API / registro['original']).read_bytes())
         anterior = por_arquivo[registro['arquivo']]
         assert resultado['nome_previsto'] == anterior['nome_previsto']
-        np.testing.assert_allclose(resultado['pontuacoes'], anterior['pontuacoes'], rtol=1e-4, atol=1e-6)
+        # Mac ARM e Linux x86_64 podem variar no cálculo float32 das redes.
+        # Toleramos até 0,01 ponto percentual; o nome acima deve ser idêntico.
+        np.testing.assert_allclose(resultado['pontuacoes'], anterior['pontuacoes'], rtol=0, atol=1e-4)
         assert 'erro_expressao' not in resultado
         expressao = resultado['expressao']
         assert expressao['nome'] in NOMES_EXPRESSOES

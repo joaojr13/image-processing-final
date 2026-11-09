@@ -19,6 +19,14 @@ def calcular_resumo_arquivo(caminho):
     return resumo.hexdigest()
 
 
+def localizar_imagem(arquivo):
+    """Resolve um caminho do manifesto e exige que ele esteja dentro de /api/dados."""
+    caminho = (RAIZ_API / arquivo).resolve()
+    if not caminho.is_relative_to(PASTA_DADOS.resolve()):
+        raise ValueError('Caminho de imagem fora da pasta de dados.')
+    return caminho
+
+
 def ler_registro_modelo():
     return json.loads((PASTA_MODELOS / 'registro.json').read_text())
 

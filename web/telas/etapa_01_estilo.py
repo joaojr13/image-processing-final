@@ -15,8 +15,6 @@ def aplicar_estilo():
     [data-testid="stMetric"] {background: #fff; padding: 14px 18px; border: 1px solid #DEE8E4; border-radius: 14px;}
     .selo {display:inline-block; padding:6px 12px; border-radius:100px; background:#E4EFEB; color:#276153; font-size:12px; letter-spacing:.07em; font-weight:700;}
     .introducao {color:#5B716B; max-width:720px; margin: .2rem 0 1.6rem;}
-    .painel-vazio {padding:40px 26px; text-align:center; color:#5B716B;}
-    .painel-vazio h3 {color:#294F46; margin:18px 0 8px;}
     .etapas {display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin:18px 0;}
     .etapa {background:white; border:1px solid #DEE8E4; border-radius:14px; padding:20px;}
     .etapa b {display:block; color:#20483E; margin-bottom:6px;}

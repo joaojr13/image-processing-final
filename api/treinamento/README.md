@@ -19,7 +19,8 @@ Salvar os novos pesos e o histórico
 | `etapa_02_extrair_caracteristicas.py` | Redimensiona, normaliza, extrai características e transforma nomes em rótulos de 0 a 4 |
 | `etapa_03_aprender.py` | Cria nossa rede, configura o aprendizado com compile() e treina com fit() |
 | `etapa_04_salvar.py` | Cria uma nova pasta e grava pesos, perdas e informações do treino |
-| `etapa_05_avaliar.py` | Avalia as fotos de teste separadamente, sem alterar os pesos |
+| `etapa_05_avaliar.py` | Lê os originais, identifica e salva a avaliação sem alterar os pesos |
+| `apoio_metricas.py` | Compara rótulos reais e previstos para calcular as métricas |
 
 Em `etapa_03_aprender.py`, `compile()` define como medir o erro e como ajustar os pesos. `fit()` realiza os ajustes durante as épocas. Somente os 2.565 parâmetros da nossa rede são treinados; a FaceNet produz características fixas antes disso.
 

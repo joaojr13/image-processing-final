@@ -82,7 +82,7 @@ São **duas camadas declaradas, uma treinável**. Dropout desativa aleatoriament
 
 O softmax fica fora dessa classe, em `api/reconhecimento/etapa_00_pipeline.py`. Ele transforma os cinco valores em pontuações que somam 100%. A maior determina o nome previsto; não é uma probabilidade calibrada de a pessoa realmente ter aquela identidade.
 
-O extrator possui **23.482.624 parâmetros congelados**. `api/reconhecimento/etapa_03_extrator_facenet.py` desativa seus gradientes, mantém o modo de avaliação e impede alterações das estatísticas internas. O otimizador recebe exclusivamente os parâmetros da nossa rede.
+O extrator possui **23.482.624 parâmetros congelados**. `api/reconhecimento/etapa_03_extrator_facenet.py` usa `requires_grad_(False)` para congelar os pesos, `eval()` para manter o modo de avaliação e `torch.no_grad()` para extrair características sem aprendizado. O otimizador recebe exclusivamente os parâmetros da nossa rede.
 
 ## Pipeline da imagem
 

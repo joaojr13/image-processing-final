@@ -2,7 +2,10 @@
 import json
 from PIL import Image
 import torch
-from api.reconhecimento.apoio_arquivos import RAIZ_API, PASTA_DADOS, calcular_resumo_arquivo, ler_registro_modelo, conferir_pesos
+from api.reconhecimento.apoio_arquivos import (
+    PASTA_DADOS, calcular_resumo_arquivo, ler_registro_modelo,
+    conferir_pesos, localizar_imagem,
+)
 from api.reconhecimento.etapa_01_preparacao import converter_para_tensor
 
 
@@ -20,8 +23,8 @@ def conferir_separacao(registros):
             raise ValueError(f'Treino e teste têm informação repetida: {campo}.')
 
 
-def carregar_divisao(divisao):
-    """Abre SOMENTE os arquivos da divisão solicitada, com hashes conferidos."""
+def ler_registros_divisao(divisao):
+    """Seleciona a divisão e confere seus arquivos, sem transformar imagens em tensores."""
     if divisao not in ('treino', 'teste'):
         raise ValueError('Divisão esperada: treino ou teste.')
     manifesto = ler_manifesto()
@@ -29,14 +32,19 @@ def carregar_divisao(divisao):
     registros = [registro for registro in manifesto['registros'] if registro['divisao'] == divisao]
     if not registros:
         raise ValueError(f'Não há imagens na divisão {divisao}.')
-    imagens = []
     for registro in registros:
-        caminho = (RAIZ_API / registro['arquivo']).resolve()
-        if not caminho.is_relative_to(PASTA_DADOS.resolve()):
-            raise ValueError('Caminho de imagem fora da pasta de dados.')
+        caminho = localizar_imagem(registro['arquivo'])
         if calcular_resumo_arquivo(caminho) != registro['sha256']:
             raise ValueError(f'Imagem alterada: {registro["arquivo"]}.')
-        with Image.open(caminho) as imagem:
+    return registros
+
+
+def carregar_divisao(divisao):
+    """Converte os recortes da divisão em tensores para o treinamento."""
+    registros = ler_registros_divisao(divisao)
+    imagens = []
+    for registro in registros:
+        with Image.open(localizar_imagem(registro['arquivo'])) as imagem:
             imagens.append(converter_para_tensor(imagem))
     return torch.cat(imagens), registros
 

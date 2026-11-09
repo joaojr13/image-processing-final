@@ -5,7 +5,7 @@ Este módulo lê arquivos do backend e devolve dados. Não cria elementos de tel
 import json
 from .reconhecimento.apoio_arquivos import (
     RAIZ_API, PASTA_DADOS, PASTA_MODELOS, PASTA_RELATORIOS,
-    calcular_resumo_arquivo, ler_registro_modelo,
+    calcular_resumo_arquivo, ler_registro_modelo, localizar_imagem,
 )
 
 
@@ -46,9 +46,7 @@ def listar_imagens_da_base(divisao, nome):
     for item in manifesto['registros']:
         if item['divisao'] != divisao or item['pessoa'] != rotulo:
             continue
-        caminho = (RAIZ_API / item['arquivo']).resolve()
-        if not caminho.is_relative_to(PASTA_DADOS.resolve()):
-            raise ValueError('Caminho de imagem fora da pasta de dados.')
+        caminho = localizar_imagem(item['arquivo'])
         imagens.append({'conteudo': caminho.read_bytes(), 'tipo': item['tipo']})
     return imagens
 

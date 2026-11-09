@@ -6,15 +6,22 @@ from api.etapa_01_consultas import carregar_avaliacao, listar_imagens_da_base
 
 
 def desenhar_matriz(matriz, nomes):
-    linhas = [{'Pessoa real': nomes[linha], 'Nome previsto': nomes[coluna], 'Fotos': matriz[linha][coluna]}
-              for linha in range(len(nomes)) for coluna in range(len(nomes))]
+    linhas = []
+    for linha, nome_real in enumerate(nomes):
+        for coluna, nome_previsto in enumerate(nomes):
+            linhas.append({
+                'Pessoa real': nome_real,
+                'Nome previsto': nome_previsto,
+                'Fotos': matriz[linha][coluna],
+            })
     dados = pd.DataFrame(linhas)
+    maior_contagem = max(1, int(dados['Fotos'].max()))
     base = alt.Chart(dados).encode(
         x=alt.X('Nome previsto:N', sort=nomes, axis=alt.Axis(labelAngle=-45, labelOverlap=False)),
         y=alt.Y('Pessoa real:N', sort=nomes),
     )
     quadrados = base.mark_rect(stroke='white', strokeWidth=3).encode(
-        color=alt.Color('Fotos:Q', scale=alt.Scale(domain=[0,max(1,max(max(linha) for linha in matriz))],
+        color=alt.Color('Fotos:Q', scale=alt.Scale(domain=[0, maior_contagem],
                                                  range=['#EEF3F0','#16736B']), legend=None),
         tooltip=['Pessoa real:N','Nome previsto:N','Fotos:Q'],
     )

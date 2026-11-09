@@ -11,7 +11,7 @@ from api.reconhecimento.etapa_01_preparacao import (
     normalizar_pixels, calcular_matriz_alinhamento, OLHOS_DESTINO,
 )
 from api.reconhecimento.etapa_04_rede_identificacao_pessoas import RedeIdentificacaoPessoas
-from api.reconhecimento.etapa_03_extrator_facenet import RedeExternaCongelada
+from api.reconhecimento import etapa_03_extrator_facenet as modulo_extrator
 from api.reconhecimento.etapa_00_pipeline import PipelineReconhecimento
 from api.reconhecimento.apoio_arquivos import ler_registro_modelo
 from api.treinamento.etapa_03_aprender import treinar_rede
@@ -37,17 +37,20 @@ def test_arquitetura_completa_e_dropout_inativo_na_avaliacao():
         rede(np.zeros((1, 3, 96, 96), dtype=np.float32))
 
 
-def test_extrator_nao_recebe_gradientes_nem_atualiza_batchnorm():
+def test_extrator_nao_recebe_gradientes_nem_atualiza_batchnorm(tmp_path, monkeypatch):
     base = nn.Sequential(nn.Linear(3,512), nn.BatchNorm1d(512), nn.Dropout(0.5))
-    extrator = RedeExternaCongelada(base)
+    caminho = tmp_path / 'pesos.pt'
+    torch.save(base.state_dict(), caminho)
+    monkeypatch.setattr(modulo_extrator, 'InceptionResnetV1', lambda **opcoes: base)
+    extrator = modulo_extrator.ExtratorFaceNet(caminho)
     estado_anterior = {k:v.clone() for k,v in base.state_dict().items()}
-    extrator.train()
-    caracteristicas = extrator(torch.randn(10,3,requires_grad=True))
+    base.train()  # Mesmo se alguém mudar o modo, extrair() volta para avaliação.
+    caracteristicas = extrator.extrair(torch.randn(10,3,requires_grad=True))
     keras.utils.set_random_seed(42)
     pesos_iniciais = RedeIdentificacaoPessoas().get_weights()
-    rede, curvas = treinar_rede(caracteristicas.numpy(), np.tile(np.arange(5), 2), epocas=2)
-    assert not extrator.training and not base.training
-    assert not caracteristicas.requires_grad
+    rede, curvas = treinar_rede(caracteristicas, np.tile(np.arange(5), 2), epocas=2)
+    assert not base.training
+    assert isinstance(caracteristicas, np.ndarray)
     assert all(not p.requires_grad and p.grad is None for p in base.parameters())
     assert all(torch.equal(v,estado_anterior[k]) for k,v in base.state_dict().items())
     assert len(curvas) == 2 and np.isfinite([item['perda_treino'] for item in curvas]).all()

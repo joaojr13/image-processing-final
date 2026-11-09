@@ -51,54 +51,62 @@ def mostrar_resultado(resultado, nomes):
                      hide_index=True, width='stretch')
 
 
+def receber_foto(identificador_modelo):
+    """Recebe a imagem e limpa o resultado anterior quando a foto ou o modelo muda."""
+    st.subheader('Envie uma foto')
+    st.write('Escolha uma foto de frente, bem iluminada e com apenas uma pessoa.')
+    arquivo = st.file_uploader(
+        'Selecionar foto do rosto', type=['jpg', 'jpeg', 'png', 'webp'],
+        label_visibility='collapsed', key='foto_enviada',
+    )
+    st.caption('JPG, PNG ou WEBP · até 12 MB · a foto enviada não é salva no projeto.')
+    conteudo = arquivo.getvalue() if arquivo is not None else None
+    identificador_foto = hashlib.sha256(conteudo).hexdigest() if conteudo else None
+    identificador_atual = (identificador_foto, identificador_modelo)
+    if st.session_state.get('foto_processada') != identificador_atual:
+        st.session_state.pop('resultado', None)
+
+    previa = None
+    if conteudo:
+        try:
+            previa = preparar_previa_foto(conteudo)
+        except ValueError as erro:
+            st.error(str(erro))
+    return conteudo, previa, identificador_atual
+
+
+def processar_foto(conteudo, identificador_modelo, identificador_atual):
+    """Executa a análise solicitada e guarda o resultado para as próximas atualizações da tela."""
+    st.session_state.pop('resultado', None)
+    try:
+        with st.spinner('Identificando a pessoa e analisando a expressão…'):
+            resultado = obter_pipeline(identificador_modelo).identificar(conteudo)
+        st.session_state['resultado'] = resultado
+        st.session_state['foto_processada'] = identificador_atual
+    except (ValueError, OSError) as erro:
+        st.error(str(erro))
+
+
 def renderizar(registro, identificador_modelo):
     esquerda, direita = st.columns([1, 1.05], gap='large')
-    with esquerda:
-        with st.container(border=True):
-            st.subheader('Envie uma foto')
-            st.write('Escolha uma foto de frente, bem iluminada e com apenas uma pessoa.')
-            arquivo = st.file_uploader('Selecionar foto do rosto', type=['jpg', 'jpeg', 'png', 'webp'],
-                                       label_visibility='collapsed', key='foto_enviada')
-            st.caption('JPG, PNG ou WEBP · até 12 MB · a foto enviada não é salva no projeto.')
-            conteudo = arquivo.getvalue() if arquivo is not None else None
-            identificador_foto = hashlib.sha256(conteudo).hexdigest() if conteudo else None
-            identificador_atual = (identificador_foto, identificador_modelo)
-            if st.session_state.get('foto_processada') != identificador_atual:
-                st.session_state.pop('resultado', None)
-            previa = None
-            if conteudo:
-                try:
-                    previa = preparar_previa_foto(conteudo)
-                except ValueError as erro:
-                    st.error(str(erro))
-            if st.button('Identificar pessoa', type='primary', disabled=previa is None, width='stretch'):
-                st.session_state.pop('resultado', None)
-                try:
-                    with st.spinner('Identificando a pessoa e analisando a expressão…'):
-                        resultado = obter_pipeline(identificador_modelo).identificar(conteudo)
-                    st.session_state['resultado'] = resultado
-                    st.session_state['foto_processada'] = identificador_atual
-                except (ValueError, OSError) as erro:
-                    st.error(str(erro))
-            resultado = st.session_state.get('resultado')
-            if resultado:
-                st.image(desenhar_deteccao(resultado), caption='Rosto localizado na foto', width='stretch')
-            elif previa:
-                st.image(previa, caption='Foto selecionada', width='stretch')
-    with direita:
+    with esquerda, st.container(border=True):
+        conteudo, previa, identificador_atual = receber_foto(identificador_modelo)
+        if st.button('Identificar pessoa', type='primary', disabled=previa is None, width='stretch'):
+            processar_foto(conteudo, identificador_modelo, identificador_atual)
+
         resultado = st.session_state.get('resultado')
+        if resultado:
+            st.image(desenhar_deteccao(resultado), caption='Rosto localizado na foto', width='stretch')
+        elif previa:
+            st.image(previa, caption='Foto selecionada', width='stretch')
+
+    with direita:
         if resultado:
             mostrar_resultado(resultado, registro['nomes'])
         else:
             with st.container(border=True):
-                st.markdown('''<div class="painel-vazio">
-                <svg width="84" height="84" viewBox="0 0 84 84" fill="none" aria-hidden="true">
-                  <rect x="1" y="1" width="82" height="82" rx="24" fill="#E7F0EB"/>
-                  <path d="M23 31V23H31M53 23H61V31M61 53V61H53M31 61H23V53" stroke="#16736B" stroke-width="2.5" stroke-linecap="round"/>
-                  <circle cx="42" cy="36" r="9" stroke="#16736B" stroke-width="2"/>
-                  <path d="M29 57C29 44 55 44 55 57" stroke="#16736B" stroke-width="2" stroke-linecap="round"/>
-                </svg><h3>O resultado aparece aqui</h3>
-                <p>Envie a foto e selecione <b>Identificar pessoa</b>.<br>Você verá o rosto localizado, o nome previsto e a expressão estimada.</p>
-                </div>''', unsafe_allow_html=True)
+                st.subheader('O resultado aparece aqui')
+                st.write('Envie a foto e selecione **Identificar pessoa**. Você verá o rosto localizado, '
+                         'o nome previsto e a expressão estimada.')
             st.caption('Integrantes cadastrados: ' + ' · '.join(registro['nomes']))
     st.caption('Quer entender o caminho da imagem? A aba “Como funciona” mostra cada etapa e separa as duas redes.')

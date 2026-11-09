@@ -70,7 +70,7 @@ O pipeline envia o recorte alinhado para uma análise auxiliar, separada da iden
 | `etapa_04_salvar.py` | Grava pesos e registro em uma nova pasta |
 | `etapa_05_avaliar.py` | Avalia fotos de teste em um comando separado, sem treinar |
 
-`apoio_parametros.py` centraliza épocas, semente e parâmetros do otimizador. `apoio_validacao_treino.py` confere as entradas e calcula pesos por integrante.
+`apoio_parametros.py` centraliza épocas, semente e parâmetros do otimizador. `apoio_validacao_treino.py` confere as entradas e calcula pesos por integrante. `apoio_metricas.py` calcula acurácia, precisão, recall, F1 e matriz a partir dos rótulos.
 
 Na raiz do projeto:
 

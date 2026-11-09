@@ -21,4 +21,20 @@ jobs:
       - name: Verificar instalação
         run: python -m pip check
       - name: Testar redes e interface com os arquivos publicados
-        run: python -m pytest -q
+        run: python -m pytest -q --junitxml=/tmp/resultado-testes.xml
+      - name: Mostrar detalhes dos testes que falharam
+        if: failure()
+        run: |
+          python - <<'PYTHON'
+          from pathlib import Path
+          from xml.etree import ElementTree
+          caminho = Path('/tmp/resultado-testes.xml')
+          if caminho.exists():
+              for teste in ElementTree.parse(caminho).iter('testcase'):
+                  for falha in list(teste):
+                      if falha.tag not in ('failure', 'error'):
+                          continue
+                      mensagem = (falha.text or falha.get('message', ''))[-6000:]
+                      mensagem = mensagem.replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
+                      print(f"::error title={teste.get('name')}::{mensagem}")
+          PYTHON

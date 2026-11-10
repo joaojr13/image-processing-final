@@ -11,7 +11,7 @@ from api import etapa_01_consultas as consultas
 
 
 @pytest.mark.parametrize('tipo', [np.float32, np.float64])
-def test_limiar_aceita_93_por_cento_e_recusa_valor_imediatamente_abaixo(tipo):
+def test_limiar_aceita_95_por_cento_e_recusa_valor_imediatamente_abaixo(tipo):
     limite = tipo(LIMIAR_IDENTIFICACAO)
     for valor, esperado in [
         (np.nextafter(limite, tipo(0)), 'Desconhecido'),
@@ -32,7 +32,7 @@ def test_pipeline_rejeita_pontuacoes_baixas_sem_adicionar_saida_a_rede(monkeypat
     imagem = ler_registros_divisao('teste')[0]
     resultado = pipeline.identificar(localizar_imagem(imagem['original']).read_bytes())
     assert resultado['nome_previsto'] == 'Desconhecido'
-    assert resultado['limiar_identificacao'] == 0.93
+    assert resultado['limiar_identificacao'] == 0.95
     assert resultado['pontuacoes_brutas'].shape == (5,)
     np.testing.assert_allclose(resultado['pontuacoes'], [0.2] * 5)
 
@@ -69,7 +69,7 @@ from PIL import Image
 from web.telas.etapa_02_reconhecer import mostrar_resultado
 mostrar_resultado({
     'nome_previsto': 'Desconhecido',
-    'limiar_identificacao': 0.93,
+    'limiar_identificacao': 0.95,
     'pontuacoes': np.array([0.89, 0.04, 0.03, 0.02, 0.02]),
     'pontuacoes_brutas': np.zeros(5),
     'caracteristicas': np.zeros(512),
@@ -79,5 +79,5 @@ mostrar_resultado({
 ''').run()
     assert not pagina.exception
     assert pagina.subheader[0].value == 'Desconhecido'
-    assert '93%' in pagina.info[0].value
+    assert '95%' in pagina.info[0].value
     assert len(pagina.dataframe[0].value) == 5

@@ -14,7 +14,7 @@ from .etapa_01_preparacao import (
 
 
 # Regra de rejeição após a rede; não é uma sexta classe aprendida.
-LIMIAR_IDENTIFICACAO = 0.93
+LIMIAR_IDENTIFICACAO = 0.95
 
 
 def aplicar_softmax(pontuacoes_brutas):

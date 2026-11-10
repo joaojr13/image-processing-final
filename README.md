@@ -80,7 +80,7 @@ O arquivo **`api/reconhecimento/etapa_04_rede_identificacao_pessoas.py`** conté
 
 São **duas camadas declaradas, uma treinável**. Dropout desativa aleatoriamente 10% das entradas no treino, não possui pesos e fica desativado na avaliação e na identificação. A camada Dense possui `512 × 5 + 5 = 2.565` parâmetros: 2.560 pesos e cinco vieses. Não há camada oculta. A entrada não é contada como camada adicional.
 
-O softmax fica fora dessa classe, em `api/reconhecimento/etapa_00_pipeline.py`. Ele transforma os cinco valores em pontuações que somam 100%. A maior determina o candidato. Se for menor que 93%, o resultado é “Desconhecido”. A pontuação não é uma probabilidade calibrada de a pessoa realmente ter aquela identidade.
+O softmax fica fora dessa classe, em `api/reconhecimento/etapa_00_pipeline.py`. Ele transforma os cinco valores em pontuações que somam 100%. A maior determina o candidato. Se for menor que 95%, o resultado é “Desconhecido”. A pontuação não é uma probabilidade calibrada de a pessoa realmente ter aquela identidade.
 
 O extrator possui **23.482.624 parâmetros congelados**. `api/reconhecimento/etapa_03_extrator_facenet.py` usa `requires_grad_(False)` para congelar os pesos, `eval()` para manter o modo de avaliação e `torch.no_grad()` para extrair características sem aprendizado. O otimizador recebe exclusivamente os parâmetros da nossa rede.
 
@@ -97,7 +97,7 @@ A ordem está em **`PipelineReconhecimento.identificar`**, no arquivo `api/recon
 7. **Redimensionar:** interpolação bilinear gera `[1,3,160,160]`, mantendo o tratamento do treinamento. Não recupera detalhes ausentes.
 8. **Normalizar:** aplica `(valor × 255 − 127,5) / 128`, obtendo valores aproximadamente entre −1 e +1.
 9. **Extrair:** FaceNet congelada produz `[1,512]` características.
-10. **Identificar:** nossa rede produz `[1,5]` valores. Softmax gera as pontuações. A maior deve atingir 93% para aceitar o nome; abaixo disso, retorna “Desconhecido”.
+10. **Identificar:** nossa rede produz `[1,5]` valores. Softmax gera as pontuações. A maior deve atingir 95% para aceitar o nome; abaixo disso, retorna “Desconhecido”.
 
 No ramo de identificação, não aplicamos Fourier, equalização de histograma, suavização adicional nem conversão para cinza. As imagens intermediárias vêm da execução real. Os trechos mostrados em “Como funciona” são lidos dos arquivos reais do projeto.
 
@@ -121,7 +121,7 @@ O modelo ativo percorreu o pipeline completo a partir das cinco fotos originais:
 - **Macro:** média simples das métricas dos cinco integrantes.
 - **Matriz de confusão:** linhas são nomes reais; colunas, nomes previstos. A diagonal contém os acertos.
 
-**O limiar de identificação é 93%.** Uma pontuação inferior gera “Desconhecido”; igual ou superior aceita o nome mais pontuado. A constante `LIMIAR_IDENTIFICACAO` fica em `api/reconhecimento/etapa_00_pipeline.py`. É uma regra após a rede, que continua com cinco saídas. O limite não foi calibrado com pessoas externas e elas ainda podem ser aceitas. A matriz inclui rejeições; a média macro continua sobre os cinco integrantes. A base de teste contém somente integrantes e não mede a rejeição de pessoas externas.
+**O limiar de identificação é 95%.** Uma pontuação inferior gera “Desconhecido”; igual ou superior aceita o nome mais pontuado. A constante `LIMIAR_IDENTIFICACAO` fica em `api/reconhecimento/etapa_00_pipeline.py`. É uma regra após a rede, que continua com cinco saídas. O limite não foi calibrado com pessoas externas e elas ainda podem ser aceitas. A matriz inclui rejeições; a média macro continua sobre os cinco integrantes. A base de teste contém somente integrantes e não mede a rejeição de pessoas externas.
 
 ## Treinar e avaliar
 

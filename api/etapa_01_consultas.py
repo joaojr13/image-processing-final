@@ -3,6 +3,7 @@
 Este módulo lê arquivos do backend e devolve dados. Não cria elementos de tela.
 """
 import json
+from .reconhecimento.etapa_00_pipeline import LIMIAR_IDENTIFICACAO
 from .reconhecimento.apoio_arquivos import (
     RAIZ_API, PASTA_DADOS, PASTA_MODELOS, PASTA_RELATORIOS,
     calcular_resumo_arquivo, ler_registro_modelo, localizar_imagem,
@@ -16,7 +17,8 @@ def carregar_contexto_modelos():
     registro_expressao = PASTA_MODELOS / 'expressoes' / 'registro.json'
     if registro_expressao.exists():
         identificador += calcular_resumo_arquivo(registro_expressao)
-    return registro, identificador
+    registro['limiar_identificacao'] = LIMIAR_IDENTIFICACAO
+    return registro, identificador + str(LIMIAR_IDENTIFICACAO)
 
 
 def carregar_avaliacao(registro):
@@ -26,7 +28,8 @@ def carregar_avaliacao(registro):
         return None
     relatorio = json.loads(caminho.read_text())
     confere = (
-        relatorio['pesos_identificacao_sha256'] == registro['identificacao']['sha256']
+        relatorio.get('limiar_identificacao') == LIMIAR_IDENTIFICACAO
+        and relatorio['pesos_identificacao_sha256'] == registro['identificacao']['sha256']
         and relatorio['pesos_extrator_sha256'] == registro['extrator']['sha256']
         and relatorio['manifesto_sha256'] == calcular_resumo_arquivo(PASTA_DADOS / 'manifesto.json')
     )

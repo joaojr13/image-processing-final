@@ -42,6 +42,8 @@ def renderizar(registro):
     if relatorio is None:
         st.info('A avaliação deste modelo ainda não está disponível ou precisa ser atualizada.')
         return
+    st.caption(f'Limiar de identificação nesta avaliação: {relatorio["limiar_identificacao"]:.0%}. '
+               'Rejeitar uma foto de um integrante conta como erro.')
     colunas = st.columns(4)
     colunas[0].metric('Acurácia', f'{relatorio["acuracia"]:.0%}')
     colunas[1].metric('Precisão média', f'{relatorio["precisao_macro"]:.0%}')
@@ -52,9 +54,10 @@ def renderizar(registro):
     with matriz:
         with st.container(border=True):
             st.markdown('**Matriz de confusão**')
-            desenhar_matriz(relatorio['matriz_confusao'], registro['nomes'])
+            desenhar_matriz(relatorio['matriz_confusao'], relatorio['nomes_matriz'])
             st.caption('Linhas: pessoa real. Colunas: nome previsto. A diagonal mostra os acertos. '
-                       'Cada número é uma foto; o total da matriz é cinco.')
+                       'Cada número é uma foto; o total da matriz é cinco. Desconhecido na coluna indica rejeição. '
+                       'A linha Desconhecido fica zerada porque não há pessoas externas no teste.')
     with detalhes:
         with st.container(border=True):
             st.markdown('**Resultado de cada foto**')
@@ -62,7 +65,7 @@ def renderizar(registro):
                                        'Acertou': 'Sim' if item['acertou'] else 'Não'}
                                       for item in relatorio['previsoes']]), hide_index=True, width='stretch')
             st.write('**O que esse resultado permite dizer?**')
-            st.write('O modelo acertou essas fotos reservadas. A base é pequena e as fotos já foram '
+            st.write('O resultado descreve essas fotos reservadas. A base é pequena e as fotos já foram '
                      'usadas durante o desenvolvimento; o resultado não garante acerto em novas capturas.')
     with st.expander('Entender as métricas e os limites do teste'):
         st.markdown('''- **Acurácia:** proporção de fotos com o nome correto.

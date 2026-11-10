@@ -8,7 +8,7 @@ from api.reconhecimento.apoio_arquivos import PASTA_RELATORIOS, localizar_imagem
 
 def test_metricas_com_acertos_erros_e_classe_sem_amostras():
     resultado = calcular_metricas([0, 0, 1], [0, 1, 1], ['Pessoa A', 'Pessoa B', 'Pessoa C'])
-    assert resultado['matriz_confusao'] == [[1, 1, 0], [0, 1, 0], [0, 0, 0]]
+    assert resultado['matriz_confusao'] == [[1, 1, 0, 0], [0, 1, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
     assert resultado['acuracia'] == pytest.approx(2 / 3)
     assert resultado['precisao_macro'] == pytest.approx(0.5)
     assert resultado['recall_macro'] == pytest.approx(0.5)

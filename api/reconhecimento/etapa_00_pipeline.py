@@ -13,6 +13,10 @@ from .etapa_01_preparacao import (
 )
 
 
+# Regra de rejeição após a rede; não é uma sexta classe aprendida.
+LIMIAR_IDENTIFICACAO = 0.93
+
+
 def aplicar_softmax(pontuacoes_brutas):
     """Converte cinco saídas em pontuações que somam 1; não são certezas calibradas."""
     valores = np.asarray(pontuacoes_brutas, dtype=np.float32)
@@ -22,6 +26,8 @@ def aplicar_softmax(pontuacoes_brutas):
 
 def selecionar_integrante(pontuacoes, nomes):
     indice = int(pontuacoes[0].argmax())
+    if pontuacoes[0, indice] < LIMIAR_IDENTIFICACAO:
+        return 'Desconhecido'
     return nomes[indice]
 
 
@@ -62,6 +68,7 @@ class PipelineReconhecimento:
         # Os valores exibidos na interface vêm desta mesma execução.
         resultado = {
             'nome_previsto': nome_previsto,
+            'limiar_identificacao': LIMIAR_IDENTIFICACAO,
             'imagem_preparada': imagem_preparada,
             'deteccao': deteccao,
             'rosto_alinhado': rosto_alinhado,

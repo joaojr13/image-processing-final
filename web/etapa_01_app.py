@@ -32,6 +32,6 @@ aba_identificacao, aba_funcionamento, aba_avaliacao = st.tabs(['Identificar pess
 with aba_identificacao:
     reconhecer.renderizar(registro, identificador_modelo)
 with aba_funcionamento:
-    como_funciona.renderizar()
+    como_funciona.renderizar(registro)
 with aba_avaliacao:
     avaliacao.renderizar(registro)

@@ -7,7 +7,9 @@ def calcular_metricas(rotulos_reais, rotulos_previstos, nomes):
     precisao, recall, f1, suporte = precision_recall_fscore_support(
         rotulos_reais, rotulos_previstos, labels=rotulos, zero_division=0,
     )
-    matriz = confusion_matrix(rotulos_reais, rotulos_previstos, labels=rotulos)
+    # O último índice representa rejeição. A média macro continua sobre os integrantes.
+    nomes_matriz = nomes + ['Desconhecido']
+    matriz = confusion_matrix(rotulos_reais, rotulos_previstos, labels=rotulos + [len(nomes)])
 
     por_pessoa = []
     for indice, nome in enumerate(nomes):
@@ -25,5 +27,6 @@ def calcular_metricas(rotulos_reais, rotulos_previstos, nomes):
         'recall_macro': float(recall.mean()),
         'f1_macro': float(f1.mean()),
         'matriz_confusao': matriz.tolist(),
+        'nomes_matriz': nomes_matriz,
         'por_pessoa': por_pessoa,
     }

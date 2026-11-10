@@ -7,6 +7,7 @@
     "João",
     "Samanta"
   ],
+  "limiar_identificacao": 0.93,
   "quantidade_treino": 40,
   "quantidade_teste": 5,
   "pesos_identificacao_sha256": "4fb395bf56f0f9f0e76a32e3bcfb5bf3e9117f31ebb866283cf5b6625c54020b",
@@ -89,9 +90,19 @@
       0,
       0,
       0,
+      0,
       0
     ],
     [
+      0,
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
       0,
       1,
       0,
@@ -101,6 +112,7 @@
     [
       0,
       0,
+      0,
       1,
       0,
       0
@@ -109,6 +121,7 @@
       0,
       0,
       0,
+      0,
       1,
       0
     ],
@@ -117,8 +130,17 @@
       0,
       0,
       0,
-      1
+      0,
+      0
     ]
+  ],
+  "nomes_matriz": [
+    "Diego",
+    "Fernanda",
+    "Guilherme",
+    "João",
+    "Samanta",
+    "Desconhecido"
   ],
   "por_pessoa": [
     {
@@ -160,6 +182,6 @@
   "limites": [
     "Base pequena; fotos já observadas no desenvolvimento.",
     "O teste separa arquivos, mas não assegura ocasiões de captura independentes.",
-    "Sempre escolhe um dos cinco integrantes; rejeição de desconhecidos não foi validada."
+    "Limiar de identificação de 93%; rejeição de pessoas externas não foi validada."
   ]
 }

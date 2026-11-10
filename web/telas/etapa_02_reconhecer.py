@@ -17,7 +17,8 @@ def obter_pipeline(identificador_modelo):
 def desenhar_deteccao(resultado):
     imagem = resultado['imagem_preparada'].copy()
     desenho = ImageDraw.Draw(imagem)
-    desenho.rectangle(resultado['deteccao'].caixa.tolist(), outline='#16736B', width=4)
+    cor = '#B7791F' if resultado['nome_previsto'] == 'Desconhecido' else '#16736B'
+    desenho.rectangle(resultado['deteccao'].caixa.tolist(), outline=cor, width=4)
     return imagem
 
 
@@ -28,10 +29,13 @@ def mostrar_resultado(resultado, nomes):
         rosto.image(resultado['rosto_alinhado'], width=128)
         descricao.caption('Nome previsto')
         descricao.subheader(resultado['nome_previsto'])
-        indice = nomes.index(resultado['nome_previsto'])
-        descricao.write(f'Pontuação: **{resultado["pontuacoes"][indice]:.1%}**'.replace('.', ','))
-        st.caption('A pontuação compara os cinco integrantes. Pessoas externas também receberão um nome; '
-                   'esta versão não possui rejeição validada de desconhecidos.')
+        indice = int(resultado['pontuacoes'].argmax())
+        descricao.write(f'Maior pontuação: **{resultado["pontuacoes"][indice]:.2%}**'.replace('.', ','))
+        limiar = resultado['limiar_identificacao']
+        if resultado['nome_previsto'] == 'Desconhecido':
+            st.info(f'A maior pontuação não atingiu o mínimo de {limiar:.0%}.')
+        st.caption(f'Abaixo de {limiar:.0%}: Desconhecido. A partir desse valor: nome mais pontuado. '
+                   'O limiar não foi calibrado com pessoas externas; elas ainda podem receber pontuação alta.')
     mostrar_expressao(resultado)
     with st.expander('Ver pontuações e processamento desta foto'):
         st.dataframe(pd.DataFrame({

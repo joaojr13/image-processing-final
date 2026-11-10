@@ -46,7 +46,7 @@
   "limites": [
     "Base pequena; fotos já observadas no desenvolvimento.",
     "O teste separa arquivos, mas não assegura ocasiões de captura independentes.",
-    "Sempre escolhe um dos cinco integrantes; rejeição de desconhecidos não foi validada."
+    "Limiar de identificação de 93%; rejeição de pessoas externas não foi validada."
   ],
   "origem_pesos_antes_keras_sha256": "dcb76b659fd3228f9291a1af87c60dffca4a611a26b9a23221a6ed1ca804cd3c"
 }

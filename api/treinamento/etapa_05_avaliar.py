@@ -13,6 +13,7 @@ from api.reconhecimento.apoio_montagem import montar_pipeline
 from api.reconhecimento.etapa_05_classificador_integrantes import ClassificadorIntegrantes
 from .etapa_01_dados import ler_registros_divisao
 from .apoio_metricas import calcular_metricas
+from api.reconhecimento.etapa_00_pipeline import LIMIAR_IDENTIFICACAO
 
 
 def executar(caminho_dos_pesos=None):
@@ -23,6 +24,7 @@ def executar(caminho_dos_pesos=None):
     if caminho_dos_pesos is not None:
         pesos = Path(caminho_dos_pesos).resolve()
         pipeline.classificador = ClassificadorIntegrantes(pesos)
+    nomes_saida = registro['nomes'] + ['Desconhecido']
     previsoes = []
     reais = []
     previstos = []
@@ -32,7 +34,7 @@ def executar(caminho_dos_pesos=None):
             raise ValueError('Foto original alterada desde o registro.')
         resultado = pipeline.identificar(original.read_bytes())
         real = registro['rotulos'].index(imagem['pessoa'])
-        previsto = registro['nomes'].index(resultado['nome_previsto'])
+        previsto = nomes_saida.index(resultado['nome_previsto'])
         reais.append(real)
         previstos.append(previsto)
         previsoes.append({
@@ -46,6 +48,7 @@ def executar(caminho_dos_pesos=None):
     relatorio = {
         'descricao': 'Avaliação do modelo fixo em cinco fotos separadas do treino; pipeline completo desde os originais.',
         'nomes': registro['nomes'],
+        'limiar_identificacao': LIMIAR_IDENTIFICACAO,
         'quantidade_treino': registro['identificacao']['imagens_treino'],
         'quantidade_teste': len(imagens_teste),
         'pesos_identificacao_sha256': calcular_resumo_arquivo(pesos),

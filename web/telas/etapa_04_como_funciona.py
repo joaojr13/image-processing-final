@@ -4,7 +4,8 @@ import streamlit as st
 from api.etapa_01_consultas import ler_codigo_explicativo
 
 
-def renderizar():
+def renderizar(registro):
+    limiar = registro['limiar_identificacao']
     st.subheader('Da imagem ao nome')
     st.write('O programa localiza o rosto, extrai suas características e associa esses números aos integrantes.')
     st.markdown('''<div class="etapas">
@@ -38,10 +39,13 @@ def renderizar():
             ['7. Redimensionar', 'Interpolação bilinear de 96×96 para 160×160. Não recupera detalhes ausentes.'],
             ['8. Normalizar', 'Para os valores já entre 0 e 1: (valor × 255 − 127,5) / 128. A entrada fica aproximadamente entre −1 e 1.'],
             ['9. Extrair características', 'A FaceNet congelada transforma os pixels em 512 números.'],
-            ['10. Identificar', 'Nossa rede calcula cinco valores brutos. Softmax transforma-os em pontuações; a maior indica o nome previsto.'],
+            ['10. Identificar', 'Nossa rede calcula cinco valores brutos. Softmax transforma-os em pontuações; selecionamos a maior.'],
+            ['11. Aplicar o limiar', f'Se a maior pontuação for menor que {limiar:.0%}, retorna Desconhecido; caso contrário, aceita o nome.'],
         ], columns=['Etapa', 'O que acontece']), hide_index=True, width='stretch')
         st.caption('Os tratamentos usados são os listados acima. Não aplicamos Fourier, suavização adicional, '
                    'equalização de histograma ou conversão para cinza no ramo de identificação.')
+    st.caption('Desconhecido é uma rejeição depois da rede, não uma sexta classe. '
+               'Uma pessoa externa ainda pode ultrapassar o limiar; esse comportamento não foi validado.')
     with st.expander('Arquitetura completa da nossa rede', expanded=True):
         st.code('512 características → Dropout(0.1) → Dense(5) → 5 valores brutos', language='text')
         st.dataframe(pd.DataFrame([

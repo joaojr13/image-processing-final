@@ -1,6 +1,6 @@
 # Avaliação
 
-`avaliacao.json` contém previsões das cinco fotos originais de teste, matriz e métricas do modelo ativo. SHA-256 associa o resultado aos pesos e ao manifesto; a interface omite métricas divergentes.
+`avaliacao.json` contém previsões das cinco fotos originais de teste, matriz e métricas do modelo ativo. SHA-256 associa o resultado aos pesos e ao manifesto; o relatório também registra o limiar de identificação; a interface omite métricas divergentes.
 
 Cinco acertos em cinco fotos descrevem somente esse conjunto pequeno, já consultado no desenvolvimento. Não são um teste novo e cego. Não há avaliação de rejeição de desconhecidos.
 

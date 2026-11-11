@@ -1,6 +1,6 @@
 # AP02 · Reconhecimento de rostos
 
-Projeto didático em Streamlit para identificar **Diego, Fernanda, Guilherme, João e Samanta**, com uma foto e um rosto por execução. A interface separa identificação, funcionamento e avaliação.
+Projeto didático em Streamlit para identificar **Diego, Fernanda, Guilherme, João e Samanta**, com uma foto enviada ou tirada pela webcam e um rosto por execução. A interface separa identificação, funcionamento e avaliação.
 
 ## Organização: /web e /api
 

@@ -57,16 +57,25 @@ def mostrar_resultado(resultado, nomes):
 
 def receber_foto(identificador_modelo):
     """Recebe a imagem e limpa o resultado anterior quando a foto ou o modelo muda."""
-    st.subheader('Envie uma foto')
+    st.subheader('Escolha ou tire uma foto')
     st.write('Escolha uma foto de frente, bem iluminada e com apenas uma pessoa.')
-    arquivo = st.file_uploader(
-        'Selecionar foto do rosto', type=['jpg', 'jpeg', 'png', 'webp'],
-        label_visibility='collapsed', key='foto_enviada',
-    )
-    st.caption('JPG, PNG ou WEBP · até 12 MB · a foto enviada não é salva no projeto.')
+    origem = st.segmented_control(
+        'Origem da foto', ['Enviar foto', 'Usar webcam'],
+        default='Enviar foto', key='origem_foto',
+    ) or 'Enviar foto'
+    if origem == 'Usar webcam':
+        st.caption('Permita o acesso à câmera no navegador, tire a foto e selecione Identificar pessoa.')
+        arquivo = st.camera_input('Tirar foto do rosto', key='foto_webcam')
+    else:
+        arquivo = st.file_uploader(
+            'Selecionar foto do rosto', type=['jpg', 'jpeg', 'png', 'webp'],
+            label_visibility='collapsed', key='foto_enviada',
+        )
+        st.caption('JPG, PNG ou WEBP · até 12 MB.')
+    st.caption('A foto é usada somente nesta análise; não é salva no projeto nem adicionada ao treinamento.')
     conteudo = arquivo.getvalue() if arquivo is not None else None
     identificador_foto = hashlib.sha256(conteudo).hexdigest() if conteudo else None
-    identificador_atual = (identificador_foto, identificador_modelo)
+    identificador_atual = (origem, identificador_foto, identificador_modelo)
     if st.session_state.get('foto_processada') != identificador_atual:
         st.session_state.pop('resultado', None)
 
@@ -110,7 +119,7 @@ def renderizar(registro, identificador_modelo):
         else:
             with st.container(border=True):
                 st.subheader('O resultado aparece aqui')
-                st.write('Envie a foto e selecione **Identificar pessoa**. Você verá o rosto localizado, '
+                st.write('Envie uma foto ou tire uma pela webcam e selecione **Identificar pessoa**. Você verá o rosto localizado, '
                          'o nome previsto e a expressão estimada.')
             st.caption('Integrantes cadastrados: ' + ' · '.join(registro['nomes']))
     st.caption('Quer entender o caminho da imagem? A aba “Como funciona” mostra cada etapa e separa as duas redes.')
